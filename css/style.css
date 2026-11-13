@@ -1,0 +1,183 @@
+/* =========================================================
+   Austin Franklin :: style.css
+   1. Colours and sizes
+   2. Base
+   3. Header
+   4. Intro
+   5. Work grid
+   6. About
+   7. Footer
+   ========================================================= */
+
+
+/* ---------- 1. Colours and sizes ----------
+   One ink, one paper, one accent: the page reads like a printed score.
+   main.js reads these same variables, so the canvas always matches. */
+:root {
+  color-scheme: light;
+  --paper: #ffffff;
+  --ink: #111214;
+  --muted: #6b6f73;
+  --accent: #2b44d6;
+  --tile: #f1f2f0;
+
+  --edge: clamp(1rem, 4vw, 3rem);
+  --gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --paper: #101113;
+    --ink: #eceeea;
+    --muted: #9a9ea2;
+    --accent: #8a98ff;
+    --tile: #1a1c1f;
+  }
+}
+
+
+/* ---------- 2. Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+a { color: inherit; text-underline-offset: 0.2em; }
+a:hover { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* The canvas is fixed behind the page and lets clicks through */
+#stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+#stage canvas { display: block; }
+
+.top, main, .bottom {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ---------- 3. Header ---------- */
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--edge);
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.top nav { display: flex; gap: 1.5rem; }
+.top nav a { text-decoration: none; }
+
+main { padding: 0 var(--edge); }
+
+
+/* ---------- 4. Intro ---------- */
+.intro {
+  max-width: 40rem;
+  padding: clamp(2rem, 10vh, 6rem) 0;
+  font-size: clamp(1.2rem, 2vw, 1.45rem);
+  line-height: 1.4;
+}
+
+/* The name is already in the logo; the h1 stays for screen readers */
+.intro h1 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.intro p { margin: 0 0 1em; }
+
+.contact {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+
+/* ---------- 5. Work grid ---------- */
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: calc(var(--gap) * 1.5) var(--gap);
+}
+
+/* Empty box: Pixi paints the background and the motif inside it */
+.art { aspect-ratio: 4 / 3; }
+
+.tile h2 {
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  margin: 0.7rem 0 0.1rem;
+}
+
+.tags {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.tile:hover h2 { color: var(--accent); }
+
+
+/* ---------- 6. About ---------- */
+.about { padding: clamp(4rem, 12vh, 8rem) 0 3rem; }
+
+.about > h2 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: -0.03em;
+  margin: 0 0 2rem;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: var(--gap) calc(var(--gap) * 2);
+  max-width: 64rem;
+}
+
+.cols h3 {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--muted);
+  margin: 0 0 0.6rem;
+}
+
+.cols h3:not(:first-child) { margin-top: 2rem; }
+.cols p { margin: 0 0 1em; max-width: 34rem; }
+
+
+/* ---------- 7. Footer ---------- */
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 2rem var(--edge);
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.bottom p { margin: 0; }

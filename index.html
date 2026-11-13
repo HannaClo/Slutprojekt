@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Austin Franklin :: sound + code</title>
+  <meta name="description" content="Austin Franklin: composer and sound artist working with algorithmic composition, generative music and machine learning.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- PixiJS draws everything generative into this one canvas, behind the page -->
+  <div id="stage" aria-hidden="true"></div>
+
+  <header class="top">
+    <a class="logo" href="./">austin franklin</a>
+    <nav aria-label="Main">
+      <a href="#work">work</a>
+      <a href="#about">about</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h1>Austin Franklin</h1>
+      <p><strong>Based in Stockholm,</strong> Austin Franklin is a composer and sound artist working with process: algorithmic composition, generative music and machine learning.</p>
+      <p>He also builds the software his music runs on, researches merged reality and information retrieval, and teaches creative coding and sound design.</p>
+      <!-- Replace with your real address -->
+      <p><a class="contact" href="mailto:hello@example.com">Get in touch</a></p>
+    </section>
+
+    <!-- Each data-motif names a drawing function in js/main.js -->
+    <section id="work" aria-label="Work">
+      <ul class="grid">
+        <li class="tile">
+          <div class="art" data-motif="bloom"></div>
+          <h2>bloom</h2>
+          <p class="tags">cello / reflexive electronics / 2021</p>
+        </li>
+        <li class="tile">
+          <div class="art" data-motif="idols"></div>
+          <h2>four idols</h2>
+          <p class="tags">album / 2020</p>
+        </li>
+        <li class="tile">
+          <div class="art" data-motif="scatter"></div>
+          <h2>the unfinder</h2>
+          <p class="tags">software / composition / research</p>
+        </li>
+        <li class="tile">
+          <div class="art" data-motif="grid"></div>
+          <h2>bounded</h2>
+          <p class="tags">software / language / music</p>
+        </li>
+        <li class="tile">
+          <div class="art" data-motif="rings"></div>
+          <h2>lightmotif</h2>
+          <p class="tags">game / godot / instrument</p>
+        </li>
+        <li class="tile">
+          <div class="art" data-motif="links"></div>
+          <h2>xan / pool</h2>
+          <p class="tags">research / audio / provenance</p>
+        </li>
+      </ul>
+    </section>
+
+    <section id="about" class="about">
+      <h2>about</h2>
+      <div class="cols">
+        <div>
+          <h3>music</h3>
+          <p><strong>Bloom</strong> is for cello and reflexive electronics. It was performed at Carnegie Hall in 2022 by Eduard Teregulov with the Constantinides New Music Ensemble, and was part of the ISMIR 2022 music programme.</p>
+          <p><strong>Four Idols</strong> is an album from 2020, available on <a href="https://austinfranklin12.bandcamp.com/">Bandcamp</a>.</p>
+          <h3>software</h3>
+          <p><strong>The Unfinder</strong> is software and compositions built within the IRESAP research project. <strong>Bounded</strong> is a studio for making music by typing plain-language prompts. <strong>Lightmotif</strong> is a game you play with a real instrument into a microphone. <strong>xan / pool</strong> keeps track of sound files across a computer and stores derived files as recipes, after Ted Nelson’s Xanadu.</p>
+        </div>
+        <div>
+          <h3>research</h3>
+          <p>IRESAP, funded by KK-stiftelsen, with Rikard Lindell and Henrik Frisk. Partners include Mälardalen University, the Royal College of Music in Stockholm, Ericsson, Spotify and teenage engineering.</p>
+          <h3>teaching</h3>
+          <p>Creative coding, sound design for game development, and web design at Södertörn University.</p>
+          <h3>background</h3>
+          <p>Studied Experimental Music &amp; Digital Media at Louisiana State University.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bottom">
+    <p>© 2026 Austin Franklin</p>
+    <p>move to push the field, click to send a ripple</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.6.6/dist/pixi.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
