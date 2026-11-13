@@ -1,12 +1,12 @@
 // =========================================================
-// Austin Franklin :: main.js
+// Out of order :: main.js
 //
-// One PixiJS canvas sits behind the page and draws two things:
-//   1. a field of dots that the pointer pushes and clicks ripple through
-//   2. a generative image inside every project tile
+// En PixiJS-canvas ligger bakom sidan och ritar två saker:
+//   1. ett fält av prickar som pekaren knuffar och som klick skickar krusningar genom
+//   2. en generativ bild i varje världsruta
 //
-// Structure:
-//   setup -> colours -> input -> dot field -> motifs -> frame loop
+// Struktur:
+//   setup -> färger -> input -> prickfält -> motiv -> frame-loop
 // =========================================================
 
 
@@ -15,14 +15,14 @@
 const app = new PIXI.Application();
 await app.init({
   resizeTo: window,
-  backgroundAlpha: 0,           // transparent, the page colour shows through
+  backgroundAlpha: 0,           // genomskinlig, sidans bakgrund syns igenom
   antialias: true,
   resolution: Math.min(window.devicePixelRatio || 1, 2),
   autoDensity: true,
 });
 document.getElementById("stage").appendChild(app.canvas);
 
-// Two layers: drawn in this order, so tiles cover the dots
+// Två lager: ritas i den här ordningen, så rutorna täcker prickarna
 const fieldLayer = new PIXI.Graphics();
 const artLayer = new PIXI.Graphics();
 app.stage.addChild(fieldLayer, artLayer);
@@ -30,8 +30,8 @@ app.stage.addChild(fieldLayer, artLayer);
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 
-// ---------- Colours ----------
-// Read from the CSS variables so the canvas follows light and dark mode.
+// ---------- Färger ----------
+// Läses från CSS-variablerna så att canvasen alltid matchar sidan.
 
 const colours = {};
 
@@ -43,13 +43,12 @@ function readColours() {
 }
 
 readColours();
-matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readColours);
 
 
 // ---------- Input ----------
 
 const pointer = { x: -9999, y: -9999 };
-const ripples = [];   // every click adds one: { x, y, born }
+const ripples = [];   // varje klick lägger till en: { x, y, born }
 
 window.addEventListener("pointermove", (e) => {
   pointer.x = e.clientX;
@@ -60,10 +59,12 @@ window.addEventListener("pointerdown", (e) => {
   ripples.push({ x: e.clientX, y: e.clientY, born: performance.now() });
 });
 
-// Each tile keeps a hover value that eases between 0 and 1
+// Varje ruta har ett hover-värde som mjukt rör sig mellan 0 och 1
+// Varje ruta har också sin världsfärg (--c i HTML:en)
 const tiles = [...document.querySelectorAll(".tile")].map((el) => {
   const tile = {
     box: el.querySelector(".art"),
+    colour: new PIXI.Color(getComputedStyle(el).getPropertyValue("--c").trim()).toNumber(),
     motif: el.querySelector(".art").dataset.motif,
     hover: 0,
     target: 0,
@@ -75,13 +76,13 @@ const tiles = [...document.querySelectorAll(".tile")].map((el) => {
 
 
 // ---------- Dot field ----------
-// Every dot has a home position and a current position.
-// Forces push it away; a spring pulls it home again.
+// Varje prick har en hemposition och en nuvarande position.
+// Krafter knuffar bort den, en fjäder drar hem den igen.
 
 const SPACING = 28;
 const PUSH_RADIUS = 150;
-const RIPPLE_SPEED = 500;     // pixels per second
-const RIPPLE_LIFE = 2000;     // milliseconds
+const RIPPLE_SPEED = 500;     // pixlar per sekund
+const RIPPLE_LIFE = 2000;     // millisekunder
 
 let dots = [];
 
@@ -94,7 +95,7 @@ function buildField() {
   }
 }
 
-// Push a dot away from a point, stronger when closer
+// Knuffa en prick bort från en punkt, hårdare ju närmare den är
 function pushAway(dot, fromX, fromY, radius, strength) {
   const dx = dot.x - fromX;
   const dy = dot.y - fromY;
@@ -107,13 +108,13 @@ function pushAway(dot, fromX, fromY, radius, strength) {
 }
 
 function updateField(now) {
-  // Forget ripples that have faded out
+  // Glöm krusningar som har bleknat bort
   while (ripples.length && now - ripples[0].born > RIPPLE_LIFE) ripples.shift();
 
   for (const dot of dots) {
     pushAway(dot, pointer.x, pointer.y, PUSH_RADIUS, 1.2);
 
-    // A ripple is a ring that grows; only dots near the ring get pushed
+    // En krusning är en ring som växer; bara prickar nära ringen knuffas
     for (const ripple of ripples) {
       const age = now - ripple.born;
       const ringRadius = (age / 1000) * RIPPLE_SPEED;
@@ -121,7 +122,7 @@ function updateField(now) {
       if (fromRing < 20) pushAway(dot, ripple.x, ripple.y, ringRadius + 20, 3 * (1 - age / RIPPLE_LIFE));
     }
 
-    // Spring home, with friction so it settles
+    // Fjädra hem, med friktion så att den lugnar sig
     dot.vx = (dot.vx + (dot.homeX - dot.x) * 0.06) * 0.82;
     dot.vy = (dot.vy + (dot.homeY - dot.y) * 0.06) * 0.82;
     dot.x += dot.vx;
@@ -132,7 +133,7 @@ function updateField(now) {
 function drawField() {
   fieldLayer.clear();
 
-  // Resting dots in grey, moving dots in the accent colour
+  // Prickar som vilar i grått, prickar i rörelse i accentfärgen
   const moving = [];
   for (const dot of dots) {
     const offset = Math.abs(dot.x - dot.homeX) + Math.abs(dot.y - dot.homeY);
@@ -149,15 +150,16 @@ buildField();
 window.addEventListener("resize", buildField);
 
 
-// ---------- Motifs ----------
-// One drawing function per project. They all take the same arguments:
-//   g      the Graphics layer to draw into
-//   x, y   top-left corner of the tile on screen
-//   w, h   tile size
-//   t      time in seconds
-//   hover  0 (resting) to 1 (pointer on the tile)
+// ---------- Motiv ----------
+// En ritfunktion per värld. De tar alla samma argument:
+//   g       Graphics-lagret att rita i
+//   x, y    rutans övre vänstra hörn på skärmen
+//   w, h    rutans storlek
+//   t       tid i sekunder
+//   hover   0 (vilar) till 1 (pekaren på rutan)
+//   c       världens färg
 
-// A small seeded random, so the scatter looks the same on every visit
+// En liten slumpgenerator med fast frö, så att prickarna ser likadana ut varje gång
 function seededRandom(seed) {
   return () => {
     seed = (seed * 16807) % 2147483647;
@@ -168,125 +170,94 @@ function seededRandom(seed) {
 const random = seededRandom(7);
 const scatterPoints = Array.from({ length: 48 }, () => ({ x: random(), y: random(), phase: random() * 6.28 }));
 
+// En enkel gubbe av streck: huvud, kropp, armar och ben. sway rör armar och ben.
+function figure(g, cx, cy, size, sway, colour, alpha, t) {
+  const head = size * 0.09;
+  const neck = cy - size * 0.3 + head;
+  const hip = cy + size * 0.05;
+  const wave = Math.sin(t * 1.6);
+
+  g.circle(cx, cy - size * 0.3, head).stroke({ width: 2, color: colour, alpha });
+  g.moveTo(cx, neck).lineTo(cx, hip);                                                        // kropp
+  g.moveTo(cx, neck + size * 0.06).lineTo(cx - size * 0.2 - sway, cy - size * 0.02 + wave * size * 0.04);   // vänster arm
+  g.moveTo(cx, neck + size * 0.06).lineTo(cx + size * 0.2 + sway, cy - size * 0.02 - wave * size * 0.04);   // höger arm
+  g.moveTo(cx, hip).lineTo(cx - size * 0.1 - sway * 0.3, cy + size * 0.32);                  // vänster ben
+  g.moveTo(cx, hip).lineTo(cx + size * 0.1 + sway * 0.3, cy + size * 0.32);                  // höger ben
+  g.stroke({ width: 2, color: colour, alpha });
+}
+
 const motifs = {
-  // Bloom: petals that open on hover
-  bloom(g, x, y, w, h, t, hover) {
-    const cx = x + w / 2, cy = y + h / 2;
-    const petals = 14;
-    const open = 0.35 + 0.15 * Math.sin(t * 0.8) + hover * 0.5;
-    const length = Math.min(w, h) * 0.4 * open;
-
-    for (let i = 0; i < petals; i++) {
-      const angle = (i / petals) * Math.PI * 2 + t * 0.1;
-      const side = 0.18;
-      g.poly([
-        cx, cy,
-        cx + Math.cos(angle - side) * length * 0.6, cy + Math.sin(angle - side) * length * 0.6,
-        cx + Math.cos(angle) * length, cy + Math.sin(angle) * length,
-        cx + Math.cos(angle + side) * length * 0.6, cy + Math.sin(angle + side) * length * 0.6,
-      ]);
+  // Gravitation: partiklar faller mot golvet. På hover vänder tyngdkraften och de faller uppåt.
+  gravity(g, x, y, w, h, t, hover, c) {
+    for (const p of scatterPoints) {
+      const fall = (t * 0.35 + p.phase / 6.28) % 1;
+      const eased = fall * fall;                               // accelererar som av tyngdkraft
+      const down = y + h * 0.1 + eased * h * 0.8;
+      const up = y + h * 0.9 - eased * h * 0.8;
+      const py = down + (up - down) * hover;
+      const px = x + w * (0.1 + 0.8 * p.x) + Math.sin(t + p.phase) * 3;
+      g.circle(px, py, 2.5);
     }
-    g.fill({ color: colours.accent, alpha: hover * 0.25 });
-    g.stroke({ width: 1.25, color: colours.ink });
+    g.fill({ color: c, alpha: 0.9 });
+
+    // Golv där de landar (och tak när det är vänt)
+    g.rect(x + w * 0.1, y + h * 0.9, w * 0.8, 1.5).fill({ color: c, alpha: 1 - hover });
+    g.rect(x + w * 0.1, y + h * 0.1, w * 0.8, 1.5).fill({ color: c, alpha: hover });
   },
 
-  // Four Idols: four figures built from stacked bars; hover makes them stand still
-  idols(g, x, y, w, h, t, hover) {
-    const columns = 4, rows = 12;
-    const columnWidth = (w * 0.8) / columns;
-    const rowHeight = (h * 0.7) / rows;
-    const sway = 1 - hover;
+  // Vatten: vågor som blir högre och snabbare på hover
+  water(g, x, y, w, h, t, hover, c) {
+    const lines = 8, steps = 48;
+    const amp = h * (0.02 + hover * 0.045);
+    const speed = 1.2 + hover * 1.8;
 
-    for (let c = 0; c < columns; c++) {
-      const centre = x + w * 0.1 + columnWidth * (c + 0.5);
-      for (let r = 0; r < rows; r++) {
-        const barWidth = columnWidth * (0.25 + 0.5 * Math.abs(Math.sin(r * 0.7 + c * 1.3)));
-        const shift = Math.sin(t * 1.2 + r * 0.4 + c) * columnWidth * 0.15 * sway;
-        g.rect(centre - barWidth / 2 + shift, y + h * 0.15 + r * rowHeight, barWidth, rowHeight * 0.6);
+    for (let k = 0; k < lines; k++) {
+      const baseY = y + h * (0.2 + (0.6 * k) / (lines - 1));
+      for (let i = 0; i <= steps; i++) {
+        const u = i / steps;
+        const py = baseY + Math.sin(u * 9 + t * speed + k * 0.7) * amp + Math.sin(u * 4 - t * speed * 0.6 + k) * amp * 0.6;
+        if (i === 0) g.moveTo(x + w * 0.08, py);
+        else g.lineTo(x + w * (0.08 + 0.84 * u), py);
       }
+      g.stroke({ width: 1.5, color: c, alpha: 0.35 + 0.65 * (k / (lines - 1)) });
     }
-    g.fill(hover > 0.5 ? colours.accent : colours.ink);
   },
 
-  // The Unfinder: drifting points that find each other on hover
-  scatter(g, x, y, w, h, t, hover) {
-    const points = scatterPoints.map((p) => ({
-      x: x + w * (0.1 + 0.8 * p.x) + Math.sin(t * 0.7 + p.phase) * 10,
-      y: y + h * (0.1 + 0.8 * p.y) + Math.cos(t * 0.5 + p.phase) * 10,
-    }));
+  // Friktion: en kula glider nedför en backe. På hover tar friktionen tag och kulan hackar.
+  friction(g, x, y, w, h, t, hover, c) {
+    const x0 = x + w * 0.1, y0 = y + h * 0.3;
+    const x1 = x + w * 0.9, y1 = y + h * 0.78;
 
-    if (hover > 0.01) {
-      for (let i = 0; i < points.length; i++) {
-        for (let j = i + 1; j < points.length; j++) {
-          if (Math.hypot(points[i].x - points[j].x, points[i].y - points[j].y) < w * 0.16) {
-            g.moveTo(points[i].x, points[i].y).lineTo(points[j].x, points[j].y);
-          }
-        }
-      }
-      g.stroke({ width: 1, color: colours.accent, alpha: hover * 0.8 });
+    // Backen, med korta streck under som ytan
+    g.moveTo(x0, y0).lineTo(x1, y1).stroke({ width: 2, color: c });
+    for (let i = 0; i <= 14; i++) {
+      const u = i / 14;
+      g.moveTo(x0 + (x1 - x0) * u, y0 + (y1 - y0) * u).lineTo(x0 + (x1 - x0) * u - 6, y0 + (y1 - y0) * u + 8);
     }
+    g.stroke({ width: 1, color: c, alpha: 0.4 });
 
-    for (const p of points) g.circle(p.x, p.y, 2.5);
-    g.fill(colours.ink);
+    // Kulan: utan friktion accelererar den, med friktion är den långsammare och hackar
+    const s = (t * 0.22) % 1;
+    const free = s * s;
+    const grip = s * 0.4 + Math.sin(s * 40) * 0.01 * hover;
+    const pos = free + (grip - free) * hover;
+    const bx = x0 + (x1 - x0) * pos, by = y0 + (y1 - y0) * pos;
+
+    for (let k = 1; k <= 6; k++) {                              // svans
+      const q = Math.max(0, pos - k * 0.03);
+      g.circle(x0 + (x1 - x0) * q, y0 + (y1 - y0) * q - 8, 6 - k * 0.7).fill({ color: c, alpha: 0.5 - k * 0.07 });
+    }
+    g.circle(bx, by - 8, 7).fill(colours.ink);
   },
 
-  // Bounded: cells that grow and shrink inside a fixed frame
-  grid(g, x, y, w, h, t, hover) {
-    const columns = 8, rows = 6;
-    const cellW = (w * 0.8) / columns, cellH = (h * 0.8) / rows;
+  // Skugga: en gubbe och dess skugga. Skuggan svajar mer och mer på hover.
+  shadow(g, x, y, w, h, t, hover, c) {
+    const size = Math.min(w, h) * 0.85;
+    const cx = x + w / 2, cy = y + h * 0.5;
+    const drift = Math.sin(t * 1.3) * size * (0.04 + hover * 0.12);
 
-    for (let i = 0; i < columns; i++) {
-      for (let j = 0; j < rows; j++) {
-        const size = 0.5 + 0.5 * Math.sin(t * (1 + hover * 2) + i * 0.6 + j * 0.9);
-        const cx = x + w * 0.1 + cellW * (i + 0.5);
-        const cy = y + h * 0.1 + cellH * (j + 0.5);
-        g.rect(cx - (cellW * size) / 2.4, cy - (cellH * size) / 2.4, (cellW * size) / 1.2, (cellH * size) / 1.2);
-      }
-    }
-    g.fill(hover > 0.5 ? colours.accent : colours.ink);
-    g.rect(x + w * 0.1, y + h * 0.1, w * 0.8, h * 0.8).stroke({ width: 1.5, color: colours.ink });
-  },
-
-  // Lightmotif: rings spreading out, like a note going into a microphone
-  rings(g, x, y, w, h, t, hover) {
-    const cx = x + w / 2, cy = y + h / 2;
-    const maxRadius = Math.min(w, h) * 0.45;
-    const count = 7;
-
-    for (let k = 0; k < count; k++) {
-      const radius = (t * (18 + hover * 40) + (k * maxRadius) / count) % maxRadius;
-      g.circle(cx, cy, radius).stroke({
-        width: 1.5,
-        color: hover > 0.5 ? colours.accent : colours.ink,
-        alpha: 1 - radius / maxRadius,
-      });
-    }
-    g.circle(cx, cy, 5 + hover * 4).fill(colours.ink);
-  },
-
-  // xan / pool: nodes and the links between them
-  links(g, x, y, w, h, t, hover) {
-    const count = 7;
-    const cx = x + w / 2, cy = y + h / 2;
-    const nodes = [];
-
-    for (let i = 0; i < count; i++) {
-      const angle = (i / count) * Math.PI * 2 + t * 0.15;
-      const radius = Math.min(w, h) * (0.28 + 0.08 * Math.sin(t + i * 2));
-      nodes.push({ x: cx + Math.cos(angle) * radius * 1.3, y: cy + Math.sin(angle) * radius });
-    }
-
-    // Every node links to two others, so nothing is left on its own
-    for (let i = 0; i < count; i++) {
-      for (const step of [2, 3]) {
-        const other = nodes[(i + step) % count];
-        g.moveTo(nodes[i].x, nodes[i].y).lineTo(other.x, other.y);
-      }
-    }
-    g.stroke({ width: 1.25, color: hover > 0.5 ? colours.accent : colours.ink, alpha: 0.6 + hover * 0.4 });
-
-    for (const node of nodes) g.rect(node.x - 5, node.y - 5, 10, 10);
-    g.fill(colours.ink);
+    figure(g, cx + size * 0.12 + drift, cy + size * 0.02, size, drift * 1.6, c, 0.7, t * 0.8 + 1);   // skuggan
+    figure(g, cx, cy, size, 0, colours.ink, 1, t);                                                   // personen
   },
 };
 
@@ -296,17 +267,17 @@ function drawTiles(time) {
   for (const tile of tiles) {
     tile.hover += (tile.target - tile.hover) * 0.1;
 
-    // Where is the tile on screen right now? Skip it if scrolled away.
+    // Var på skärmen är rutan just nu? Hoppa över den om den är utanför bild.
     const r = tile.box.getBoundingClientRect();
     if (r.bottom < 0 || r.top > window.innerHeight) continue;
 
     artLayer.rect(r.left, r.top, r.width, r.height).fill(colours.tile);
-    motifs[tile.motif](artLayer, r.left, r.top, r.width, r.height, time, tile.hover);
+    motifs[tile.motif](artLayer, r.left, r.top, r.width, r.height, time, tile.hover, tile.colour);
   }
 }
 
 
-// ---------- Frame loop ----------
+// ---------- Frame-loop ----------
 
 let time = 0;
 
