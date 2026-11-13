@@ -1,97 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hanna Dahl Clolien :: sound + code</title>
-  <meta name="description" content="Austin Franklin: composer and sound artist working with algorithmic composition, generative music and machine learning.">
+  <title>Out of order :: interaktiv installation</title>
+  <meta name="description" content="Out of order är en interaktiv installation i fyra världar: Gravitation, Vatten, Friktion och Skugga.">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- PixiJS draws everything generative into this one canvas, behind the page -->
+  <!-- PixiJS ritar allt generativt i den här canvasen, bakom sidan -->
   <div id="stage" aria-hidden="true"></div>
 
   <header class="top">
-    <a class="logo" href="./">Hanna Dahl Clolien</a>
-    <nav aria-label="Main">
-      <a href="#work">work</a>
-      <a href="#about">about</a>
+    <a class="logo" href="./">Out of order</a>
+    <nav aria-label="Huvudmeny">
+      <a href="#varldar">världar</a>
+      <a href="#om">om</a>
     </nav>
   </header>
 
   <main>
     <section class="intro">
-      <h1>Hanna Dahl Clolien</h1>
-      <p><strong>Based in Stockholm,</strong> Hanna Dahl Clolien is...</p>
-      <!-- Replace with your real address -->
-      <p><a class="contact" href="mailto:hello@example.com">Get in touch</a></p>
+      <div class="label">INTERAKTIV INSTALLATION</div>
+      <h1>OUT OF ORDER</h1>
+      <p><strong>Fyra världar</strong> där fysiken långsamt slutar fungera som den ska. Rör dig, klappa, luta och greppa, och se vad som händer när reglerna går sönder.</p>
+      <!-- Byt ut mot er riktiga adress -->
+      <p><a class="contact" href="mailto:hello@example.com">Hör av dig</a></p>
     </section>
 
-    <!-- Each data-motif names a drawing function in js/main.js -->
-    <section id="work" aria-label="Work">
+    <!-- Varje data-motif pekar på en ritfunktion i js/main.js. --c är världens färg (samma som i kontrollcentret). -->
+    <section id="varldar" aria-label="Världar">
       <ul class="grid">
-        <li class="tile">
-          <div class="art" data-motif="bloom"></div>
-          <h2>bloom</h2>
-          <p class="tags">cello / reflexive electronics / 2021</p>
+        <li class="tile" style="--c:#ff3df2">
+          <div class="art" data-motif="gravity"></div>
+          <p class="num">VÄRLD 01</p>
+          <h2>Gravitation</h2>
+          <p class="desc">Klappa dina händer. Se hur partiklarna svarar när tyngdkraften ändras.</p>
+          <p class="tags">MIKROFON / KLAPP / MELLANSLAG</p>
         </li>
-        <li class="tile">
-          <div class="art" data-motif="idols"></div>
-          <h2>four idols</h2>
-          <p class="tags">album / 2020</p>
+        <li class="tile" style="--c:#19e6ff">
+          <div class="art" data-motif="water"></div>
+          <p class="num">VÄRLD 02</p>
+          <h2>Vatten</h2>
+          <p class="desc">Luta glaset och häll. Vattnet förändras för varje nivå i hallen.</p>
+          <p class="tags">MELLANSLAG / MICRO:BIT</p>
         </li>
-        <li class="tile">
-          <div class="art" data-motif="scatter"></div>
-          <h2>the unfinder</h2>
-          <p class="tags">software / composition / research</p>
+        <li class="tile" style="--c:#b06bff">
+          <div class="art" data-motif="friction"></div>
+          <p class="num">VÄRLD 03</p>
+          <h2>Friktion</h2>
+          <p class="desc">Greppa kulan med handen, släpp den och se hur friktionen ändrar rörelsen.</p>
+          <p class="tags">KAMERA / HAND / MUSPLATTA</p>
         </li>
-        <li class="tile">
-          <div class="art" data-motif="grid"></div>
-          <h2>bounded</h2>
-          <p class="tags">software / language / music</p>
-        </li>
-        <li class="tile">
-          <div class="art" data-motif="rings"></div>
-          <h2>lightmotif</h2>
-          <p class="tags">game / godot / instrument</p>
-        </li>
-        <li class="tile">
-          <div class="art" data-motif="links"></div>
-          <h2>xan / pool</h2>
-          <p class="tags">research / audio / provenance</p>
+        <li class="tile" style="--c:#6f8cff">
+          <div class="art" data-motif="shadow"></div>
+          <p class="num">VÄRLD 04</p>
+          <h2>Skugga</h2>
+          <p class="desc">Rör dig framför kameran. Se hur din skugga sviker dig.</p>
+          <p class="tags">KAMERA / KROPP</p>
         </li>
       </ul>
     </section>
 
-    <section id="about" class="about">
-      <h2>about</h2>
+    <section id="om" class="about">
+      <h2>om</h2>
       <div class="cols">
         <div>
-          <h3>music</h3>
-          <p><strong>Bloom</strong> is for cello and reflexive electronics. It was performed at Carnegie Hall in 2022 by Eduard Teregulov with the Constantinides New Music Ensemble, and was part of the ISMIR 2022 music programme.</p>
-          <p><strong>Four Idols</strong> is an album from 2020, available on <a href="https://austinfranklin12.bandcamp.com/">Bandcamp</a>.</p>
-          <h3>software</h3>
-          <p><strong>The Unfinder</strong> is software and compositions built within the IRESAP research project. <strong>Bounded</strong> is a studio for making music by typing plain-language prompts. <strong>Lightmotif</strong> is a game you play with a real instrument into a microphone. <strong>xan / pool</strong> keeps track of sound files across a computer and stores derived files as recipes, after Ted Nelson’s Xanadu.</p>
+          <h3>installationen</h3>
+          <p><strong>Out of order</strong> är en interaktiv installation i fyra världar: Gravitation, Vatten, Friktion och Skugga. Varje värld utgår från en fysikalisk regel som besökaren kan påverka med kroppen, rösten eller ett föremål.</p>
+          <p>Upplevelsen byggs upp över nivåer. För varje nivå beter sig världen lite mindre som den borde.</p>
+          <!-- Lägg gärna till: vilka ni är, kurs/skola och år -->
         </div>
         <div>
-          <h3>research</h3>
-          <p>IRESAP, funded by KK-stiftelsen, with Rikard Lindell and Henrik Frisk. Partners include Mälardalen University, the Royal College of Music in Stockholm, Ericsson, Spotify and teenage engineering.</p>
-          <h3>teaching</h3>
-          <p>Creative coding, sound design for game development, and web design at Södertörn University.</p>
-          <h3>background</h3>
-          <p>Studied Experimental Music &amp; Digital Media at Louisiana State University.</p>
+          <h3>styrning</h3>
+          <p>Gravitation styrs med mikrofon, så att man klappar för att påverka partiklarna. Vatten styrs genom att luta ett glas med en micro:bit. Friktion och Skugga använder kameran och följer hand respektive kropp.</p>
+          <h3>teknik</h3>
+          <p>Världarna är byggda för webbläsaren med bland annat p5.js, WebGL och Web Audio. Skuggan ritas av en kroppsföljning i kameran, och glaset i Vatten kopplas via Bluetooth.</p>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="bottom">
-    <p>© 2026 Hanna Dahl Clolien</p>
-    <p>move to push the field, click to send a ripple</p>
+    <p>© 2026 Out of order</p>
+    <p>flytta musen för att knuffa fältet, klicka för att skicka en krusning</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.6.6/dist/pixi.min.js"></script>
