@@ -4,19 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Out Of Order :: interaktiv installation</title>
+  <!-- Texten som visas under länken i sökresultat -->
   <meta name="description" content="Out of order är en interaktiv installation i fyra världar: Gravitation, Vatten, Friktion och Skugga.">
 
+  <!-- Allt utseende (färger, typsnitt, layout) ligger i css/style.css -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- PixiJS ritar allt generativt i den här canvasen, bakom sidan -->
+  <!-- Tom ruta där PixiJS lägger sin canvas. Allt som rör sig ritas där, bakom sidan.
+       aria-hidden döljer den för skärmläsare eftersom den bara är dekoration. -->
   <div id="stage" aria-hidden="true"></div>
 
   <header class="top">
     <a class="logo" href="./">Out Of Order</a>
     <nav aria-label="Huvudmeny">
-      <a href="#varldar">världar</a>
-      <a href="#om">om</a>
+      <!-- Länkarna hoppar ner till elementen med samma id (#varldar och #om) -->
+      <a href="#varldar">Världar</a>
+      <a href="#om">Om</a>
     </nav>
   </header>
 
@@ -25,18 +29,23 @@
       <div class="label">INTERAKTIV INSTALLATION</div>
       <h1>OUT OF ORDER</h1>
       <p><strong>Fyra världar</strong> där fysiken långsamt slutar fungera som den ska. Rör dig, klappa, luta och greppa, och se vad som händer när reglerna går sönder.</p>
-      <!-- Byt ut mot er riktiga adress -->
+      <!-- Här kan jag lägga in kontaktinformation senare -->
       <p><a class="contact" href="mailto:hello@example.com">Hör av dig</a></p>
     </section>
 
-    <!-- Varje data-motif pekar på en ritfunktion i js/main.js. --c är världens färg (samma som i kontrollcentret). -->
+    <!-- De fyra världarna, en ruta (li) per värld.
+         Två saker här styr hur rutan ritas:
+         - data-motif: namnet på ritfunktionen i js/main.js som animerar rutan
+         - --c: världens färg. Både CSS och main.js läser den. -->
     <section id="varldar" aria-label="Världar">
       <ul class="grid">
         <li class="tile" style="--c:#ff3df2">
+          <!-- Tom ruta. Pixi ritar animationen bakom den, CSS ritar ramen ovanpå. -->
           <div class="art" data-motif="gravity"></div>
           <p class="num">VÄRLD 01</p>
           <h2>Gravitation</h2>
           <p class="desc">Klappa dina händer. Se hur partiklarna svarar när tyngdkraften ändras.</p>
+          <!-- Vad man styr världen med -->
           <p class="tags">MIKROFON / KLAPP / MELLANSLAG</p>
         </li>
         <li class="tile" style="--c:#19e6ff">
@@ -63,6 +72,7 @@
       </ul>
     </section>
 
+    <!-- Om-delen, i två kolumner (.cols) -->
     <section id="om" class="about">
       <h2>OM</h2>
       <div class="cols">
@@ -70,7 +80,7 @@
           <h3>Installationen</h3>
           <p><strong>Out Of Order</strong> är en interaktiv installation i fyra världar: gravitation, vatten, friktion och skugga. Varje värld utgår från en fysikalisk regel som besökaren kan påverka med kroppen eller ett föremål.</p>
           <p>Upplevelsen byggs upp över nivåer. För varje nivå beter sig världen lite mindre som den borde.</p>
-          <!-- Lägg gärna till: vilka ni är, kurs/skola och år -->
+          <!-- Här kan jag lägga till information om projektgruppen närmare när projektet är klart -->
         </div>
         <div>
           <h3>Styrning</h3>
@@ -84,10 +94,14 @@
 
   <footer class="bottom">
     <p>© 2026 Hanna Dahl Clolien</p>
+    <!-- Förklarar hur prickarna i bakgrunden fungerar -->
     <p>flytta musen för att knuffa fältet, klicka för att skicka en krusning</p>
   </footer>
 
+  <!-- PixiJS hämtas från internet och finns sedan som ett globalt objekt som heter PIXI -->
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.6.6/dist/pixi.min.js"></script>
+  <!-- Vår egen kod. type="module" behövs eftersom main.js använder await.
+       Sidan måste därför köras via en server (t.ex. localhost), inte genom att dubbelklicka på filen. -->
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

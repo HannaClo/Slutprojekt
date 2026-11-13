@@ -11,31 +11,38 @@
 
 
 /* ---------- 1. Färger och storlekar ----------
-   Samma palett som kontrollcentret: nästan svart bakgrund, neonfärger per värld.
+   Här ligger alla färger som variabler. De skrivs --namn här och används
+   med var(--namn) längre ner, så vill man byta en färg ändrar man den bara här.
    main.js läser samma variabler, så canvasen matchar alltid. */
    :root {
-    color-scheme: dark;
-    --paper: #04030a;
-    --ink: #e3dcff;
-    --muted: #7d789e;
+    color-scheme: dark;    /* webbläsaren gör sina egna delar (t.ex. scrollisten) mörka */
+  
+    --paper: #04030a;      /* bakgrund, nästan svart */
+    --ink: #e3dcff;        /* vanlig text */
+    --muted: #7d789e;      /* dämpad text och de vilande prickarna */
     --accent: #19e6ff;     /* cyan: länkar, fokus, rörliga prickar */
     --pink: #ff3df2;       /* magenta: rubriken */
-    --tile: #0f0920;
-    --line: #2b2a45;
+    --tile: #0f0920;       /* bakgrunden inne i världsrutorna */
+    --line: #2b2a45;       /* tunna linjer och ramar */
   
-    --font: "Avenir Next", "Segoe UI", sans-serif;
-    --mono: ui-monospace, Menlo, Consolas, monospace;
+    --font: "Avenir Next", "Segoe UI", sans-serif;       /* webbläsaren tar den första som finns på datorn */
+    --mono: ui-monospace, Menlo, Consolas, monospace;    /* för etiketter, alla tecken lika breda */
   
+    /* clamp(minst, helst, högst): måttet följer skärmbredden men blir aldrig mindre
+       eller större än gränserna. --edge är sidomarginalen, --gap är avstånd mellan saker. */
     --edge: clamp(1rem, 4vw, 3rem);
     --gap: clamp(1rem, 2.5vw, 2rem);
   }
   
   
   /* ---------- 2. Grund ---------- */
+  
+  /* Padding och ram räknas in i elementets bredd, så blir det lättare att räkna på storlekar */
   *, *::before, *::after { box-sizing: border-box; }
   
   body {
     margin: 0;
+    /* Lila ton uppe i mitten som tonar ut till nästan svart. "fixed" = bakgrunden står still när man scrollar. */
     background: radial-gradient(ellipse at 50% 30%, #1c0b2e 0%, var(--paper) 70%) fixed;
     color: var(--ink);
     font-family: var(--font);
@@ -43,22 +50,23 @@
     line-height: 1.5;
   }
   
-  /* Svaga scanlines över hela sidan, som i kontrollcentret */
+  /* Svaga linjer över hela sidan som ger en gammal skärmkänsla, som i kontrollcentret.
+     ::after skapar ett extra element som inte finns i HTML:en. */
   body::after {
     content: "";
     position: fixed;
-    inset: 0;
-    z-index: 5;
-    pointer-events: none;
+    inset: 0;                   /* täcker hela skärmen */
+    z-index: 5;                 /* ligger ovanpå allt annat */
+    pointer-events: none;       /* klick går igenom, så man kan klicka på sidan under */
     opacity: 0.06;
     background: repeating-linear-gradient(0deg, #fff 0 1px, transparent 1px 3px);
   }
   
-  a { color: inherit; text-underline-offset: 0.2em; }
+  a { color: inherit; text-underline-offset: 0.2em; }   /* länkar har samma färg som texten runt omkring */
   a:hover { color: var(--accent); }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }   /* syns när man tabbar med tangentbordet */
   
-  /* Canvasen ligger fast bakom sidan och släpper igenom klick */
+  /* Canvasen ligger fast bakom hela sidan och släpper igenom klick */
   #stage {
     position: fixed;
     inset: 0;
@@ -67,6 +75,8 @@
   }
   #stage canvas { display: block; }
   
+  /* Innehållet får z-index 1 så att det hamnar framför canvasen.
+     (z-index fungerar bara på element som har en position, därför relative.) */
   .top, main, .bottom {
     position: relative;
     z-index: 1;
@@ -75,8 +85,8 @@
   
   /* ---------- 3. Topp ---------- */
   .top {
-    display: flex;
-    justify-content: space-between;
+    display: flex;                    /* logo och meny på samma rad */
+    justify-content: space-between;   /* logo till vänster, meny till höger */
     align-items: baseline;
     padding: var(--edge);
     font: 12px var(--mono);
@@ -88,7 +98,7 @@
     color: var(--pink);
     font-weight: 700;
     text-decoration: none;
-    text-shadow: 0 0 14px #ff3df288;
+    text-shadow: 0 0 14px #ff3df288;   /* glöd. De två sista siffrorna i färgen är genomskinlighet. */
   }
   
   .top nav { display: flex; gap: 1.5rem; color: var(--muted); }
@@ -99,18 +109,20 @@
   
   /* ---------- 4. Intro ---------- */
   .intro {
-    max-width: 46rem;
-    padding: clamp(2rem, 10vh, 6rem) 0;
+    max-width: 46rem;                        /* smalare text är lättare att läsa */
+    padding: clamp(2rem, 10vh, 6rem) 0;      /* luft över och under, vh = procent av skärmhöjden */
     font-size: clamp(1.2rem, 2vw, 1.45rem);
     line-height: 1.4;
   }
   
+  /* Lilla cyan-texten ovanför rubriken */
   .label {
     color: var(--accent);
     font: 12px var(--mono);
     letter-spacing: 0.35em;
   }
   
+  /* Stora rubriken */
   .intro h1 {
     margin: 0.6rem 0 1.2rem;
     font-weight: 500;
@@ -118,11 +130,12 @@
     line-height: 1.05;
     letter-spacing: 0.015em;
     color: var(--pink);
-    text-shadow: 0 0 18px #ff3df2aa, 0 0 40px #ff3df255;
+    text-shadow: 0 0 18px #ff3df2aa, 0 0 40px #ff3df255;   /* två glöd-lager: ett tätt och ett större och svagare */
   }
   
   .intro p { margin: 0 0 1em; }
   
+  /* "Hör av dig"-länken */
   .contact {
     font: bold 13px var(--mono);
     letter-spacing: 0.18em;
@@ -132,25 +145,31 @@
   
   
   /* ---------- 5. Världsrutor ---------- */
+  
+  /* Rutnätet med de fyra världarna */
   .grid {
-    list-style: none;
+    list-style: none;     /* inga punkter framför listan */
     margin: 0;
     padding: 0;
     display: grid;
+    /* Lägger så många kolumner som får plats, och varje är minst 15rem bred.
+       Bred skärm ger fyra bredvid varandra, smal skärm en under den andra. */
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-    gap: calc(var(--gap) * 1.5) var(--gap);
+    gap: calc(var(--gap) * 1.5) var(--gap);   /* radavstånd, kolumnavstånd */
   }
   
+  /* Reservfärg om en ruta saknar --c i HTML:en. Färgen som står i HTML:en vinner över den här. */
   .tile { --c: var(--accent); }
   
-  /* Tom ruta: Pixi målar bakgrunden och motivet i den. Ramen och hörnen ritas här ovanpå. */
+  /* Den tomma rutan som Pixi ritar i bakom. Ramen och hörnen ritas här ovanpå. */
   .art {
-    position: relative;
-    aspect-ratio: 4 / 3;
+    position: relative;       /* behövs för att hörnen nedan ska placeras i förhållande till rutan */
+    aspect-ratio: 4 / 3;      /* alltid 4 breda per 3 höga, oavsett bredd */
     border: 1px solid var(--line);
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;   /* ramen tonar över i stället för att hoppa */
   }
   
+  /* De två hörnmarkeringarna. Varje är en liten ruta där bara två sidor har ram. */
   .art::before, .art::after {
     content: "";
     position: absolute;
@@ -159,14 +178,17 @@
     border: 2px solid var(--c);
     opacity: 0.8;
   }
-  .art::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
-  .art::after  { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+  .art::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }     /* övre vänstra hörnet */
+  .art::after  { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }    /* nedre högra hörnet */
   
+  /* När man pekar på en ruta lyser ramen upp i världens färg */
   .tile:hover .art {
     border-color: var(--c);
+    /* color-mix blandar världsfärgen med genomskinligt (40 % färg) för en mjuk glöd */
     box-shadow: 0 0 28px color-mix(in srgb, var(--c) 40%, transparent);
   }
   
+  /* "VÄRLD 01" */
   .num {
     margin: 0.9rem 0 0;
     color: var(--c);
@@ -174,6 +196,7 @@
     letter-spacing: 0.18em;
   }
   
+  /* Världens namn, i världens färg */
   .tile h2 {
     margin: 0.2rem 0 0.4rem;
     font-size: 1.6rem;
@@ -189,6 +212,7 @@
     color: #d6cff5;
   }
   
+  /* Raden med vad man styr med, med en tunn linje ovanför */
   .tags {
     margin: 0;
     padding-top: 0.6rem;
@@ -202,6 +226,8 @@
   /* ---------- 6. Om ---------- */
   .about { padding: clamp(4rem, 12vh, 8rem) 0 3rem; }
   
+  /* Rubriken "OM". Pilen > gör att det bara gäller h2 som ligger direkt i .about,
+     inte rubrikerna i världsrutorna. */
   .about > h2 {
     margin: 0 0 2rem;
     font-size: clamp(2rem, 5vw, 3.5rem);
@@ -211,6 +237,7 @@
     text-shadow: 0 0 18px #ff3df255;
   }
   
+  /* Två kolumner bredvid varandra om det får plats, annars under varandra */
   .cols {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
@@ -218,6 +245,7 @@
     max-width: 64rem;
   }
   
+  /* De små cyan-rubrikerna (Installationen, Styrning, Teknik) */
   .cols h3 {
     margin: 0 0 0.6rem;
     font: 12px var(--mono);
@@ -226,15 +254,15 @@
     color: var(--accent);
   }
   
-  .cols h3:not(:first-child) { margin-top: 2rem; }
+  .cols h3:not(:first-child) { margin-top: 2rem; }   /* extra luft ovanför, utom för den första i kolumnen */
   .cols p { margin: 0 0 1em; max-width: 34rem; color: #d6cff5; }
   
   
   /* ---------- 7. Fot ---------- */
   .bottom {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    justify-content: space-between;   /* en text åt vänster, en åt höger */
+    flex-wrap: wrap;                  /* får de inte plats hamnar den andra under */
     gap: 1rem;
     padding: 2rem var(--edge);
     border-top: 1px solid var(--line);
