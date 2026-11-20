@@ -302,20 +302,16 @@
   color: var(--muted);
 }
 
-/* Bildrutnät med 6 kolumner: två stora bilder överst, tre mindre under.
-   object-fit: cover beskär bilden så att alla blir lika stora utan att tänjas. */
+/* Bildrutnät: fem små bilder på en rad, max 64rem brett */
 .photos {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: var(--gap);
+  grid-template-columns: repeat(5, 1fr);
+  gap: calc(var(--gap) * 0.6);
+  max-width: 64rem;
 }
-.photos figure { grid-column: span 2; }
-.photos figure:nth-child(-n+2) { grid-column: span 3; }   /* de två första tar halva bredden var */
-.photos img { aspect-ratio: 4 / 3; object-fit: cover; }
+.photos img { aspect-ratio: 4 / 5; object-fit: cover; }   /* stående format, passar dina bilder */
 
-/* På smala skärmar ligger bilderna under varandra */
-@media (max-width: 40rem) {
-  .photos { grid-template-columns: 1fr; }
-  .photos figure,
-  .photos figure:nth-child(-n+2) { grid-column: auto; }
+/* Smalare skärmar: två bilder per rad */
+@media (max-width: 56rem) {
+  .photos { grid-template-columns: repeat(2, 1fr); }
 }
