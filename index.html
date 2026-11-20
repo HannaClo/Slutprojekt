@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OUT OF ORDER :: interaktiv installation</title>
+  <title>OUT OF ORDER: interaktiv installation</title>
   <!-- Texten som visas under länken i sökresultat -->
   <meta name="description" content="Out of order är en interaktiv installation i fyra världar: Gravitation, Vatten, Friktion och Skugga.">
 
@@ -30,79 +30,114 @@
       <h1>OUT OF ORDER</h1>
       <p><strong>Fyra världar</strong> där fysiken långsamt slutar fungera som den ska. Rör dig, klappa, luta och greppa, och se vad som händer när reglerna går sönder.</p>
       <!-- Här kan jag lägga in kontaktinformation senare -->
-      <p><a class="contact" href="mailto:hello@example.com">Hör av dig</a></p>
     </section>
 
-    <!-- De fyra världarna, en ruta (li) per värld.
-         Två saker här styr hur rutan ritas:
-         - data-motif: namnet på ritfunktionen i js/main.js som animerar rutan
-         - --c: världens färg. Både CSS och main.js läser den. -->
-    <section id="varldar" aria-label="Världar">
-      <ul class="grid">
-        <li class="tile" style="--c:#ff3df2">
-          <!-- Tom ruta. Pixi ritar animationen bakom den, CSS ritar ramen ovanpå. -->
-          <div class="art" data-motif="gravity"></div>
-          <p class="num">VÄRLD 01</p>
-          <h2>Gravitation</h2>
-          <p class="desc">Klappa dina händer. Se hur partiklarna svarar när tyngdkraften ändras.</p>
-          <!-- Vad man styr världen med -->
-          <p class="tags">MIKROFON / KLAPP / MELLANSLAG</p>
-        </li>
-        <li class="tile" style="--c:#19e6ff">
-          <div class="art" data-motif="water"></div>
-          <p class="num">VÄRLD 02</p>
-          <h2>Vatten</h2>
-          <p class="desc">Luta glaset och häll. Vattnet förändras för varje nivå i hallen.</p>
-          <p class="tags">MELLANSLAG / MICRO:BIT</p>
-        </li>
-        <li class="tile" style="--c:#b06bff">
-          <div class="art" data-motif="friction"></div>
-          <p class="num">VÄRLD 03</p>
-          <h2>Friktion</h2>
-          <p class="desc">Greppa kulan med handen, släpp den och se hur friktionen ändrar rörelsen.</p>
-          <p class="tags">KAMERA / HAND / MUSPLATTA</p>
-        </li>
-        <li class="tile" style="--c:#6f8cff">
-          <div class="art" data-motif="shadow"></div>
-          <p class="num">VÄRLD 04</p>
-          <h2>Skugga</h2>
-          <p class="desc">Rör dig framför kameran. Se hur din skugga sviker dig.</p>
-          <p class="tags">KAMERA / KROPP</p>
-        </li>
-      </ul>
-    </section>
+    <!-- .showcase håller filmen och världsrutorna ihop så att de kan ligga sida vid sida.
+         Själva layouten ligger i css/style.css (avsnitt 9). -->
+    <div class="showcase">
 
-<!-- Bilder från installationen -->
-<section class="media" id="bilder">
-  <div class="label">BILDER</div>
-  <div class="photos">
-    <figure><img src="media/friktion.jpeg" alt="Beskriv bilden kort" loading="lazy"></figure>
-    <figure><img src="media/gravitation.jpeg" alt="Beskriv bilden kort" loading="lazy"></figure>
-    <figure><img src="media/skugga.jpeg" alt="Beskriv bilden kort" loading="lazy"></figure>
-    <figure><img src="media/vatten.jpeg" alt="Beskriv bilden kort" loading="lazy"></figure>
-    <figure><img src="media/installation.jpeg" alt="Beskriv bilden kort" loading="lazy"></figure>
-  </div>
-</section>
+      <!-- Film från installationen -->
+      <section class="media" id="film">
+        <div class="label">FILM FRÅN INSTALLATIONEN</div>
+        <figure>
+          <!-- controls = spelaren får knappar. playsinline gör att den inte tar över hela skärmen på mobilen.
+               poster = bilden som visas innan man trycker på play. -->
+               <video controls controlslist="nofullscreen" disablepictureinpicture playsinline preload="metadata" poster="media/startsida.jpeg">
+            <source src="media/skuggvideo.mp4" type="video/mp4">
+            Din webbläsare kan inte spela upp videon.
+          </video>
+          <figcaption>SKUGGVÄRLDEN - ANVÄNDARVIDEO</figcaption>
+        </figure>
+      </section>
 
+      <!-- De fyra världarna, en ruta (li) per värld.
+           Två saker här styr hur rutan ritas:
+           - data-motif: namnet på ritfunktionen i js/main.js som animerar rutan
+           - --c: världens färg. Både CSS och main.js läser den. -->
+      <section id="varldar" aria-label="Världar">
+        <div class="label">FYRA VÄRLDAR</div>
+        <ul class="grid">
+          <li class="tile" style="--c:#ff3df2">
+            <!-- Tom ruta. Pixi ritar animationen bakom den, CSS ritar ramen ovanpå. -->
+            <div class="art" data-motif="gravity"></div>
+            <p class="num">VÄRLD 01</p>
+            <h2>Gravitation</h2>
+            <p class="desc">Klappa dina händer. Se hur partiklarna svarar när tyngdkraften ändras.</p>
+            <!-- Vad man styr världen med -->
+            <p class="tags">MIKROFON / KLAPP / MELLANSLAG</p>
+          </li>
+          <li class="tile" style="--c:#19e6ff">
+            <div class="art" data-motif="water"></div>
+            <p class="num">VÄRLD 02</p>
+            <h2>Vatten</h2>
+            <p class="desc">Luta glaset och häll. Vattnet förändras för varje nivå i hallen.</p>
+            <p class="tags">MELLANSLAG / MICRO:BIT</p>
+          </li>
+          <li class="tile" style="--c:#b06bff">
+            <div class="art" data-motif="friction"></div>
+            <p class="num">VÄRLD 03</p>
+            <h2>Friktion</h2>
+            <p class="desc">Greppa kulan med handen, släpp den och se hur friktionen ändrar rörelsen.</p>
+            <p class="tags">KAMERA / HAND / MUSPLATTA</p>
+          </li>
+          <li class="tile" style="--c:#6f8cff">
+            <div class="art" data-motif="shadow"></div>
+            <p class="num">VÄRLD 04</p>
+            <h2>Skugga</h2>
+            <p class="desc">Rör dig framför kameran. Se hur din skugga sviker dig.</p>
+            <p class="tags">KAMERA / KROPP</p>
+          </li>
+        </ul>
+      </section>
 
-    <!-- Om-delen, i två kolumner (.cols) -->
-    <section id="om" class="about">
-      <h2>OM</h2>
-      <div class="cols">
-        <div>
-          <h3>Installationen</h3>
-          <p><strong>OUT OF ORDER</strong> är en interaktiv installation i fyra världar: gravitation, vatten, friktion och skugga. Varje värld utgår från en fysikalisk regel som besökaren kan påverka med kroppen eller ett föremål.</p>
-          <p>Upplevelsen byggs upp över nivåer. För varje nivå beter sig världen lite mindre som den borde.</p>
-          <!-- Här kan jag lägga till information om projektgruppen närmare när projektet är klart -->
-        </div>
-        <div>
-          <h3>Styrning</h3>
-          <p>Gravitation styrs med mikrofon, så att man klappar för att påverka partiklarna. Vatten styrs genom att luta ett glas med en micro:bit. Friktion och skugga använder kameran och följer hand respektive kropp.</p>
-          <h3>Teknik</h3>
-          <p>Världarna är byggda för webbläsaren med bland annat p5.js, WebGL och Web Audio. Skuggan ritas av en kroppsföljning i kameran, och glaset i vatten kopplas via Bluetooth.</p>
-        </div>
+    </div>
+
+    <!-- Bilder från installationen. --c är världens färg, samma som i världsrutorna. -->
+    <section class="media" id="bilder">
+      <div class="label">BILDER FRÅN INSTALLATIONEN</div>
+      <div class="photos">
+        <figure style="--c:#ff3df2">
+          <img src="media/gravitation.jpeg" alt="Projicerad hall i lila och blått med ljusa partiklar som svävar i luften" loading="lazy">
+          <figcaption><span class="num"></span><strong>Gravitation</strong></figcaption>
+        </figure>
+        <figure style="--c:#19e6ff">
+          <img src="media/vatten.jpeg" alt="Rosa och blå neonhall där vatten stänker uppåt och rinner över golvet" loading="lazy">
+          <figcaption><span class="num"></span><strong>Vatten</strong></figcaption>
+        </figure>
+        <figure style="--c:#b06bff">
+          <img src="media/friktion.jpeg" alt="En glänsande kula på en böjd backe i en neonupplyst industrihall" loading="lazy">
+          <figcaption><span class="num"></span><strong>Friktion</strong></figcaption>
+        </figure>
+        <figure style="--c:#6f8cff">
+          <img src="media/skugga.jpeg" alt="En mörk silhuett av en person med armarna uppsträckta mot en rosa och blå vägg" loading="lazy">
+          <figcaption><span class="num"></span><strong>Skugga</strong></figcaption>
+        </figure>
+        <figure style="--c:#ff3df2">
+          <img src="media/installation.jpeg" alt="Beskriv dekorationerna" loading="lazy">
+          <figcaption><span class="num"></span><strong>Dekorationer</strong></figcaption>
+        </figure>
       </div>
     </section>
+
+
+    <!-- Om-delen -->
+<section id="om" class="about">
+  <h2>OM</h2>
+  <div class="cols">
+    <div>
+      <h3>Installationen</h3>
+      <p><strong>OUT OF ORDER</strong> är en interaktiv installation med fyra världar: gravitation, vatten, friktion och skugga. Varje värld utgår från en fysikalisk regel som besökaren kan påverka med kropp, röst eller föremål. Vi ville utforska vad som händer när fysikens självklara regler slutar fungera. Världarna börjar välbekant, men förskjuts gradvis tills det självklara blir osäkert.</p>
+    </div>
+    <div>
+      <h3>Styrning och teknik</h3>
+      <p>Gravitation styrs med mikrofon och klapp, vatten genom att luta ett glas med micro:bit via Bluetooth, och friktion och skugga med kamera som följer hand respektive kropp. Webbaserad, byggd med bland annat p5.js, WebGL och Web Audio.</p>
+    </div>
+    <div class="who">
+      <h3>Vem är jag</h3>
+      <p>Jag heter Hanna och arbetar mellan grafisk design och interaktion, med fokus på sammanhängande visuell identitet där färg, form och rörelse samspelar. Målet: besökaren ska känna världen, inte bara se den.</p>
+    </div>
+  </div>
+</section>
   </main>
 
   <footer class="bottom">

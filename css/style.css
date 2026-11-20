@@ -291,8 +291,17 @@
 }
 
 .media video {
-  max-width: 56rem;
-  aspect-ratio: 16 / 9;
+  width: auto;
+  height: auto;               /* ← nytt: åsidosätter height="1440" i HTML:en */
+  max-width: 100%;
+  max-height: 80vh;
+  aspect-ratio: 1178 / 1440;
+}
+
+/* Bara filmrutan krymper till videons bredd, så att bildtexten hamnar precis under */
+#film figure {
+  width: fit-content;
+  max-width: 100%;
 }
 
 .media figcaption {
@@ -302,16 +311,108 @@
   color: var(--muted);
 }
 
-/* Bildrutnät: fem små bilder på en rad, max 64rem brett */
+/* Bildrutnät: samma kolumnregel som världsrutorna (.grid), så bilderna blir lika stora */
 .photos {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: calc(var(--gap) * 0.6);
-  max-width: 64rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--gap);
 }
-.photos img { aspect-ratio: 4 / 5; object-fit: cover; }   /* stående format, passar dina bilder */
+.photos img { aspect-ratio: 4 / 3; object-fit: cover; }   /* samma format som .art */
 
-/* Smalare skärmar: två bilder per rad */
-@media (max-width: 56rem) {
-  .photos { grid-template-columns: repeat(2, 1fr); }
+/* Rubrik under varje bild: liten text överst, världens namn under, båda i världens färg */
+.photos figcaption {
+  margin-top: 0.9rem;
+  font: inherit;          /* återställer den lilla mono-texten från .media figcaption */
+  letter-spacing: normal;
+}
+.photos figcaption .num {
+  display: block;
+  color: var(--c);
+  font: 11px var(--mono);
+  letter-spacing: 0.18em;
+}
+.photos figcaption strong {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--c);
+  text-shadow: 0 0 14px color-mix(in srgb, var(--c) 55%, transparent);
+}
+
+/* ---------- 9. Film och världsrutor sida vid sida ---------- */
+
+.showcase {
+  padding: clamp(2rem, 8vh, 5rem) 0;
+}
+.showcase .media { padding: 0; }                /* luften sköts av .showcase i stället */
+#varldar .label { margin-bottom: 1rem; }
+
+@media (min-width: 70rem) {
+  .showcase {
+    display: grid;
+    grid-template-columns: min(65vh, 40rem) 1fr;
+    gap: var(--gap) calc(var(--gap) * 2);
+    align-items: stretch;          /* båda kolumnerna blir lika höga (var: start) */
+  }
+
+  /* Filmblocket fyller hela kolumnens höjd: etiketten överst,
+     bildtexten längst ned, videon i mitten tar allt utrymme som blir över */
+  #film {
+    display: flex;
+    flex-direction: column;
+  }
+  #film figure {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    min-height: 0;
+  }
+  #film video {
+    flex: 1 1 0;                   /* tar resten av höjden */
+    min-height: 0;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    aspect-ratio: auto;            /* proportionerna styrs nu av rutan, inte av filmen */
+    object-fit: cover;             /* filmen fyller rutan, kanterna beskärs lite */
+  }
+
+  #varldar .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- 10. Tätare avstånd ---------- */
+
+/* Introt: behåll luften ovanför rubriken, minska den under */
+.intro {
+  padding-bottom: clamp(1rem, 3vh, 2rem);   /* var: clamp(2rem, 10vh, 6rem) */
+}
+
+/* Film + världsrutor: mindre luft ovanför, lite kvar nedanför */
+.showcase {
+  padding-top: clamp(0.5rem, 2vh, 1.5rem);  /* var: clamp(2rem, 8vh, 5rem) */
+  padding-bottom: clamp(2rem, 6vh, 4rem);
+}
+
+/* Bildsektionen */
+#bilder {
+  padding-top: clamp(1rem, 3vh, 2rem);      /* var: clamp(2rem, 8vh, 5rem) */
+}
+
+.cols .who {
+  grid-column: 1 / -1;    /* sträcker sig över alla kolumner */
+}
+/* ta bort .cols .who p { max-width: 44rem; } */
+
+/* ---------- 12. Tätare avstånd mellan bilder och Om ---------- */
+
+#bilder {
+  padding-bottom: clamp(1.5rem, 4vh, 2rem); 
+}
+
+.about {
+  padding-top: clamp(1.5rem, 5vh, 3rem);
 }
