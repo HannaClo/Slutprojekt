@@ -273,3 +273,49 @@
   }
   
   .bottom p { margin: 0; }
+
+  /* ---------- 8. Film och bilder ---------- */
+
+.media { padding: clamp(2rem, 8vh, 5rem) 0; }
+.media .label { margin-bottom: 1rem; }
+.media figure { margin: 0; }
+
+/* Video och bilder får samma tunna ram och mörka bakgrund som världsrutorna.
+   Bakgrunden behövs så att prickarna i canvasen inte syns igenom. */
+.media video,
+.media img {
+  display: block;
+  width: 100%;
+  background: var(--tile);
+  border: 1px solid var(--line);
+}
+
+.media video {
+  max-width: 56rem;
+  aspect-ratio: 16 / 9;
+}
+
+.media figcaption {
+  margin-top: 0.6rem;
+  font: 11px var(--mono);
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+/* Bildrutnät med 6 kolumner: två stora bilder överst, tre mindre under.
+   object-fit: cover beskär bilden så att alla blir lika stora utan att tänjas. */
+.photos {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--gap);
+}
+.photos figure { grid-column: span 2; }
+.photos figure:nth-child(-n+2) { grid-column: span 3; }   /* de två första tar halva bredden var */
+.photos img { aspect-ratio: 4 / 3; object-fit: cover; }
+
+/* På smala skärmar ligger bilderna under varandra */
+@media (max-width: 40rem) {
+  .photos { grid-template-columns: 1fr; }
+  .photos figure,
+  .photos figure:nth-child(-n+2) { grid-column: auto; }
+}
